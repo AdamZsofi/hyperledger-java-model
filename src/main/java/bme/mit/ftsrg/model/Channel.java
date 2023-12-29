@@ -1,19 +1,28 @@
 package bme.mit.ftsrg.model;
 
+import bme.mit.ftsrg.model.participants.Node;
+import bme.mit.ftsrg.model.participants.Peer;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Channel {
-    private String name;
-    private List<Peer> peers;
+    private String channelID;
+    private HashMap<String, Node> nodes;
 
-    public Channel(String name, List<Peer> peers) {
-        this.name = name;
-        this.peers = peers;
+    // TODO do we want to model applications?
+
+    public Channel(String channelID) {
+        this.channelID = channelID;
+        this.nodes = new HashMap<String, Node>();
     }
 
-    public void addToChannel(Peer peer) {
-        peers.add(peer);
-    }
+    public void registerNode(Node node) {
+        if (nodes.containsKey(node.getNodeID())) {
+            throw new RuntimeException("Node (id:"+node.getNodeID()+") already registered on channel");
+        }
 
-    // Additional channel-specific methods as needed
+        nodes.put(node.getNodeID(), node);
+        node.registerOnChannel(channelID);
+    }
 }
