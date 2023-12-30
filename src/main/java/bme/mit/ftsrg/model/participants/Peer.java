@@ -10,10 +10,15 @@ public class Peer extends Node {
     private final List<LedgerInstance> ledgerInstances;
     private final List<ChaincodeInstance> chaincodes;
 
-    public Peer(String nodeID, String orgID) {
-        super(nodeID, orgID);
+    public Peer(String nodeID, Organization org) {
+        super(nodeID, org);
         ledgerInstances = new ArrayList<>();
         chaincodes = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Peer "+nodeID;
     }
 
     public TransactionStatus endorseTransaction(Object transaction) {
@@ -32,6 +37,4 @@ public class Peer extends Node {
         // Update ledger, perform validation, etc.
         System.out.println("Transaction committed by Peer: " + nodeID);
     }
-
-    // Getter and setter methods
 }

@@ -8,12 +8,13 @@ import java.util.Map;
 
 public abstract class Node {
     protected String nodeID;
-    protected String orgID;
+    protected Organization org;
     protected final Map<String, LedgerInstance> ledgerInstances;
 
-    public Node(String nodeID, String orgID) {
+    public Node(String nodeID, Organization org) {
         this.nodeID = nodeID;
-        this.orgID = orgID;
+        this.org = org;
+        org.registerNode(this);
         ledgerInstances = new HashMap<>();
         // TODO Organization.organizations.get(orgID).registerNode(this);
     }

@@ -7,6 +7,12 @@ public class Organization {
     //public static HashMap<String, Organization> organizations;
     public final String id;
 
+    @Override
+    public String toString() {
+        return "Organization "+id+
+            ", nodes: " + nodes;
+    }
+
     private final ArrayList<Node> nodes = new ArrayList<>();
 
     public Organization(String id) {

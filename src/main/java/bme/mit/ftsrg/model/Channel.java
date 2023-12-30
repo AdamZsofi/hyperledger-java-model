@@ -25,4 +25,9 @@ public class Channel {
         nodes.put(node.getNodeID(), node);
         node.registerOnChannel(channelID);
     }
+
+    @Override
+    public String toString() {
+        return "Channel " + channelID + ", nodes: " + nodes;
+    }
 }

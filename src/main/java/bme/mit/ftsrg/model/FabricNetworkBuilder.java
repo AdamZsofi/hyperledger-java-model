@@ -5,7 +5,6 @@ import bme.mit.ftsrg.model.participants.OrderingService;
 import bme.mit.ftsrg.model.participants.Organization;
 import bme.mit.ftsrg.model.participants.Peer;
 import java.util.HashMap;
-import java.util.List;
 
 public class FabricNetworkBuilder {
     public HashMap<String, Organization> organizations;
@@ -23,8 +22,9 @@ public class FabricNetworkBuilder {
     }
 
     public Network build() {
-        // TODO
-        return new Network();
+        Network n = new Network(organizations, nodes, channels);
+        resetBuild();
+        return n;
     }
 
     public void addOrganization(String orgID) {
@@ -42,7 +42,7 @@ public class FabricNetworkBuilder {
             throw new RuntimeException("Node with this id already exists: "+ nodeID);
         }
 
-        nodes.put(nodeID, new Peer(nodeID, orgID));
+        nodes.put(nodeID, new Peer(nodeID, organizations.get(orgID)));
     }
 
     public void addOrderingService(String nodeID, String orgID) {
@@ -53,7 +53,7 @@ public class FabricNetworkBuilder {
             throw new RuntimeException("Node with this id already exists: "+ nodeID);
         }
 
-        nodes.put(nodeID, new OrderingService(nodeID, orgID));
+        nodes.put(nodeID, new OrderingService(nodeID, organizations.get(orgID)));
     }
 
     public void addChannel(String channelID) {

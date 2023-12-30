@@ -1,0 +1,3 @@
+target = bme.mit.ftsrg.Main
+classpath = /home/solarowl/Repositories/hyperledger-java-model/build/classes/java/main
++vm.assert = enable
