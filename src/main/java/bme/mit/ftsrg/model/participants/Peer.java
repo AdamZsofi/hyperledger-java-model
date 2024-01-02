@@ -1,6 +1,6 @@
 package bme.mit.ftsrg.model.participants;
 
-import bme.mit.ftsrg.model.TransactionStatus;
+import bme.mit.ftsrg.model.transaction.TransactionStatus;
 import bme.mit.ftsrg.model.data.ChaincodeInstance;
 import bme.mit.ftsrg.model.data.LedgerInstance;
 import java.util.ArrayList;

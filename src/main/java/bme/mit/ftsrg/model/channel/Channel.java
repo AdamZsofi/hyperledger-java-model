@@ -1,4 +1,4 @@
-package bme.mit.ftsrg.model;
+package bme.mit.ftsrg.model.channel;
 
 import bme.mit.ftsrg.model.participants.Node;
 import bme.mit.ftsrg.model.participants.Peer;
@@ -9,6 +9,7 @@ import java.util.List;
 public class Channel {
     private String channelID;
     private HashMap<String, Node> nodes;
+    private ChannelConfiguration cc = new ChannelConfiguration();
 
     // TODO do we want to model applications?
 

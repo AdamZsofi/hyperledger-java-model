@@ -3,6 +3,7 @@ package bme.mit.ftsrg.chaincode;
 // Original source: https://github.com/hyperledger/fabric-chaincode-java/blob/main/examples/fabric-contract-example-gradle/src/main/java/org/example/MyAssetContract.java
 
 import bme.mit.ftsrg.mockFabric.Context;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 /*
 import org.hyperledger.fabric.contract.Context;
@@ -35,6 +36,10 @@ public class MyAssetContract { // implements ContractInterface {
 
     }
     //@Transaction()
+    /**
+    ** returns null, if does not exist yet
+    ** returns TODO if it does
+     */
     public boolean myAssetExists(Context ctx, String myAssetId) {
         byte[] buffer = ctx.getStub().getState(myAssetId);
         return (buffer != null && buffer.length > 0);
@@ -75,12 +80,16 @@ public class MyAssetContract { // implements ContractInterface {
     }
 
     //@Transaction()
-    public void deleteMyAsset(Context ctx, String myAssetId) {
+    public void deleteMyAsset(Context ctx, String myAssetId) throws NotImplementedException {
+        throw new NotImplementedException("Not implemented yet");
+        /*
         boolean exists = myAssetExists(ctx,myAssetId);
         if (!exists) {
             throw new RuntimeException("The asset "+myAssetId+" does not exist");
         }
         ctx.getStub().delState(myAssetId);
+
+         */
     }
 
 }

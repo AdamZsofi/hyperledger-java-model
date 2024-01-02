@@ -1,5 +1,6 @@
 package bme.mit.ftsrg.model;
 
+import bme.mit.ftsrg.model.channel.Channel;
 import bme.mit.ftsrg.model.participants.Node;
 import bme.mit.ftsrg.model.participants.OrderingService;
 import bme.mit.ftsrg.model.participants.Organization;

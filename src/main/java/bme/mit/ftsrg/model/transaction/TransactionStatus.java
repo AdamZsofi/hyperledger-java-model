@@ -1,4 +1,4 @@
-package bme.mit.ftsrg.model;
+package bme.mit.ftsrg.model.transaction;
 
 public enum TransactionStatus {
     PENDING,

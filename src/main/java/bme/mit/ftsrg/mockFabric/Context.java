@@ -7,12 +7,12 @@ package bme.mit.ftsrg.mockFabric;
 public class Context {
     protected ChaincodeStub stub;
 
-    protected ClientIdentity clientIdentity;
+    // protected ClientIdentity clientIdentity;
 
     public Context(final ChaincodeStub stub) {
         this.stub = stub;
         try {
-            this.clientIdentity = new ClientIdentity(stub);
+            //this.clientIdentity = new ClientIdentity(stub);
         } catch (Exception e) {
             throw new RuntimeException("Could not create new client identity", e);
         }
@@ -22,7 +22,7 @@ public class Context {
         return this.stub;
     }
 
-    public ClientIdentity getClientIdentity() {
-        return this.clientIdentity;
-    }
+    //public ClientIdentity getClientIdentity() {
+    //    return this.clientIdentity;
+    //}
 }
