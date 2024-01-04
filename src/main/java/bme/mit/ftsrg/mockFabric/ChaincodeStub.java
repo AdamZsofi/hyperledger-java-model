@@ -4,11 +4,10 @@ package bme.mit.ftsrg.mockFabric;
 
 import java.util.HashMap;
 import java.util.Map;
-import jdk.jshell.spi.ExecutionControl;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 public class ChaincodeStub {
-    // TODO this should be the ledger copy
+    // TODO this map should be the ledger copy instead
     private final Map<String, byte[]> state = new HashMap<>();
 
     public byte[] getState(String key) {

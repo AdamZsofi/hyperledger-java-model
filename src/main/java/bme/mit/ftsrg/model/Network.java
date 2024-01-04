@@ -1,26 +1,27 @@
 package bme.mit.ftsrg.model;
 
 import bme.mit.ftsrg.model.channel.Channel;
-import bme.mit.ftsrg.model.participants.Node;
+import bme.mit.ftsrg.model.participants.OrderingService;
 import bme.mit.ftsrg.model.participants.Organization;
+import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.HashMap;
 
 public class Network {
-    public final HashMap<String, Organization> organizations;
-    public final HashMap<String, Node> nodes;
-    public final HashMap<String, Channel> channels;
+    private final HashMap<String, Organization> organizations;
+    private final HashMap<String, Peer> peers;
+    private final HashMap<String, Channel> channels;
 
-    public Network(HashMap<String, Organization> organizations, HashMap<String, Node> nodes,
+    public Network(HashMap<String, Organization> organizations, HashMap<String, Peer> peers,
         HashMap<String, Channel> channels) {
         this.organizations = organizations;
-        this.nodes = nodes;
+        this.peers = peers;
         this.channels = channels;
     }
 
     @Override
     public String toString() {
         return "Network{" +
-            "\nnodes: " + nodes +
+            "\npeers: " + peers +
             "\norganizations: " + organizations +
             "\nchannels: " + channels +
             "\n}";

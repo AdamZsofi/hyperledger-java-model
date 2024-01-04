@@ -1,7 +1,7 @@
 package bme.mit.ftsrg.model.participants;
 
+import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Organization {
     //public static HashMap<String, Organization> organizations;
@@ -9,21 +9,21 @@ public class Organization {
 
     @Override
     public String toString() {
-        return "Organization "+id+
-            ", nodes: " + nodes;
+        return "Org "+id+
+            ", peers: " + peers;
     }
 
-    private final ArrayList<Node> nodes = new ArrayList<>();
+    private final ArrayList<Peer> peers = new ArrayList<>();
 
     public Organization(String id) {
         this.id = id;
     }
 
-    public ArrayList<Node> getNodes() {
-        return nodes;
+    public ArrayList<Peer> getPeers() {
+        return peers;
     }
 
-    public void registerNode(Node node) {
-        nodes.add(node);
+    public void registerPeer(Peer peer) {
+        peers.add(peer);
     }
 }

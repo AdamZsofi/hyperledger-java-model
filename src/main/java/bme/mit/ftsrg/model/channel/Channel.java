@@ -1,34 +1,41 @@
 package bme.mit.ftsrg.model.channel;
 
-import bme.mit.ftsrg.model.participants.Node;
-import bme.mit.ftsrg.model.participants.Peer;
-import java.util.ArrayList;
+import bme.mit.ftsrg.model.participants.OrderingService;
+import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.HashMap;
-import java.util.List;
 
 public class Channel {
-    private String channelID;
-    private HashMap<String, Node> nodes;
-    private ChannelConfiguration cc = new ChannelConfiguration();
-
-    // TODO do we want to model applications?
+    private final String channelID;
+    private final HashMap<String, Peer> peers = new HashMap<>();
+    private OrderingService orderingService = null;
+    private final ChannelConfiguration cc = new ChannelConfiguration();
 
     public Channel(String channelID) {
         this.channelID = channelID;
-        this.nodes = new HashMap<String, Node>();
     }
 
-    public void registerNode(Node node) {
-        if (nodes.containsKey(node.getNodeID())) {
-            throw new RuntimeException("Node (id:"+node.getNodeID()+") already registered on channel");
+    public void registerOrderingService(OrderingService orderingService) {
+        if (this.orderingService != null) {
+            throw new RuntimeException("Channel already has an ordering service registered.");
+        }
+        this.orderingService = orderingService;
+    }
+
+    public void registerPeer(Peer peer) {
+        if (peers.containsKey(peer.getPeerId())) {
+            throw new RuntimeException("Peer (id:"+peer.getPeerId()+") already registered on channel");
         }
 
-        nodes.put(node.getNodeID(), node);
-        node.registerOnChannel(channelID);
+        peers.put(peer.getPeerId(), peer);
+        peer.registerOnChannel(channelID);
     }
 
     @Override
     public String toString() {
-        return "Channel " + channelID + ", nodes: " + nodes;
+        return "Channel " + channelID + ", peers: " + peers + ", orderer: " + orderingService;
+    }
+
+    public OrderingService getOrderingService() {
+        return orderingService;
     }
 }

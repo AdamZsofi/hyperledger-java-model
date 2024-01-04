@@ -1,6 +1,6 @@
-package bme.mit.ftsrg.model.application;
+package bme.mit.ftsrg.model.participants.application;
 
-import bme.mit.ftsrg.model.participants.Peer;
+import bme.mit.ftsrg.model.participants.peers.Peer;
 
 // the application instances will be used to initiate transactions through the chaincode
 public class Application {

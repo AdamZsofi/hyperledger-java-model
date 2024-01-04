@@ -2,11 +2,19 @@ package bme.mit.ftsrg.model.participants;
 
 import java.util.List;
 
-public class OrderingService extends Node {
+/**
+ * This is the model for the ordering service
+ * In reality this is a cluster of nodes running the Raft protocol,
+ * but we will handle ordering as a black box with different failure modes
+ */
+public class OrderingService {
+    private final String id;
 
-    public OrderingService(String nodeID, Organization org) {
-        super(nodeID, org);
+    public OrderingService(String id) {
+        this.id = id;
     }
+
+    // TODO model ordering - transaction queue..?
 
     public void createBlock(List<Object> transactions) {
         // Simulate block creation and ordering logic
@@ -15,7 +23,7 @@ public class OrderingService extends Node {
 
     @Override
     public String toString() {
-        return "Ordering Service "+nodeID;
+        return id;
     }
 
 }
