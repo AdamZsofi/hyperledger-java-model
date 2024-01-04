@@ -6,6 +6,8 @@ import bme.mit.ftsrg.model.participants.Organization;
 import bme.mit.ftsrg.model.participants.application.Application;
 import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FabricNetworkBuilder {
     public HashMap<String, OrderingService> orderers;
@@ -54,11 +56,12 @@ public class FabricNetworkBuilder {
         peers.put(peerId, new Peer(peerId, organizations.get(orgId)));
     }
 
-    public void addChannel(String channelId) {
+    public void addChannel(String channelId, List<String> endorsingPeerIds) {
         if(channels.containsKey(channelId)) {
-            throw new RuntimeException("Peer with this id already exists: "+ channelId);
+            throw new RuntimeException("Channel with this id already exists: "+ channelId);
         }
-        channels.put(channelId, new Channel(channelId));
+        List<Peer> endorsingPeers = endorsingPeerIds.stream().map(s -> peers.get(s)).collect(Collectors.toList());
+        channels.put(channelId, new Channel(channelId, endorsingPeers));
     }
 
     public void registerPeersToChannel(Iterable<String> peerIds, String channelId) {
@@ -89,13 +92,5 @@ public class FabricNetworkBuilder {
             throw new RuntimeException("Orderer with this id does not exist: "+ orderingServiceId);
         }
         channel.registerOrderingService(orderers.get(orderingServiceId));
-    }
-
-    // TODO configurable chaincode - right now we only have one kind of chaincode
-    public void addApplication(String peerId) {
-        if (peers.get(peerId) == null) {
-            throw new RuntimeException("Peer does not exist: " + peerId);
-        }
-        peers.get(peerId).registerApplication(new Application());
     }
 }

@@ -14,7 +14,7 @@ public class OrderingService {
         this.id = id;
     }
 
-    // TODO model ordering - transaction queue..?
+    // TODO model ordering - receiving transactions, async, transaction queue..?
 
     public void createBlock(List<Object> transactions) {
         // Simulate block creation and ordering logic

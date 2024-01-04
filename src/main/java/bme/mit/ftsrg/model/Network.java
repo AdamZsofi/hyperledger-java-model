@@ -28,7 +28,7 @@ public class Network {
             "\n}";
     }
 
-    public Application getApplication(String peerId) {
-        return peers.get(peerId).getApplication();
+    public Application getApplication(String channelId) {
+        return channels.get(channelId).getApplication();
     }
 }

@@ -1,3 +1,5 @@
+# command to use from project root:
+# <path-to-jpf>/bin/jpf hyperledger-java-model.jpf
 target = bme.mit.ftsrg.Main
 classpath = /home/solarowl/Repositories/hyperledger-java-model/build/classes/java/main
 +vm.assert = enable
