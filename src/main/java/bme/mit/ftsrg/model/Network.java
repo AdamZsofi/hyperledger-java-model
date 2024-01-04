@@ -3,6 +3,7 @@ package bme.mit.ftsrg.model;
 import bme.mit.ftsrg.model.channel.Channel;
 import bme.mit.ftsrg.model.participants.OrderingService;
 import bme.mit.ftsrg.model.participants.Organization;
+import bme.mit.ftsrg.model.participants.application.Application;
 import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.HashMap;
 
@@ -25,5 +26,9 @@ public class Network {
             "\norganizations: " + organizations +
             "\nchannels: " + channels +
             "\n}";
+    }
+
+    public Application getApplication(String peerId) {
+        return peers.get(peerId).getApplication();
     }
 }

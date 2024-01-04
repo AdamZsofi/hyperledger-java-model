@@ -36,10 +36,6 @@ public class MyAssetContract { // implements ContractInterface {
 
     }
     //@Transaction()
-    /**
-    ** returns null, if does not exist yet
-    ** returns TODO if it does
-     */
     public boolean myAssetExists(Context ctx, String myAssetId) {
         byte[] buffer = ctx.getStub().getState(myAssetId);
         return (buffer != null && buffer.length > 0);

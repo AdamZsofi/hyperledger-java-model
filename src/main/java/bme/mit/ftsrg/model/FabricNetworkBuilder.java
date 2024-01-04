@@ -3,6 +3,7 @@ package bme.mit.ftsrg.model;
 import bme.mit.ftsrg.model.channel.Channel;
 import bme.mit.ftsrg.model.participants.OrderingService;
 import bme.mit.ftsrg.model.participants.Organization;
+import bme.mit.ftsrg.model.participants.application.Application;
 import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.HashMap;
 
@@ -90,5 +91,11 @@ public class FabricNetworkBuilder {
         channel.registerOrderingService(orderers.get(orderingServiceId));
     }
 
-    // TODO chaincode
+    // TODO configurable chaincode - right now we only have one kind of chaincode
+    public void addApplication(String peerId) {
+        if (peers.get(peerId) == null) {
+            throw new RuntimeException("Peer does not exist: " + peerId);
+        }
+        peers.get(peerId).registerApplication(new Application());
+    }
 }

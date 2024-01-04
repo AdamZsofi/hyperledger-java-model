@@ -3,6 +3,7 @@ package bme.mit.ftsrg.model.participants.peers;
 import bme.mit.ftsrg.model.participants.Organization;
 import bme.mit.ftsrg.model.data.ChaincodeInstance;
 import bme.mit.ftsrg.model.data.LedgerInstance;
+import bme.mit.ftsrg.model.participants.application.Application;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,15 +13,13 @@ public class Peer {
     private final String peerId;
     private final Organization org;
     private final Map<String, LedgerInstance> ledgerInstances;
-
-    private final List<ChaincodeInstance> chaincodes;
+    private Application application = null;
 
     public Peer(String peerId, Organization org) {
         this.peerId = peerId;
         this.org = org;
         org.registerPeer(this);
         ledgerInstances = new HashMap<>();
-        chaincodes = new ArrayList<>();
     }
 
     public void registerOnChannel(String channelID) {
@@ -48,5 +47,13 @@ public class Peer {
         // Simulate committing logic
         // Update ledger, perform validation, etc.
         System.out.println("Transaction committed by Peer: " + peerId);
+    }
+
+    public void registerApplication(Application application) {
+        this.application = application;
+    }
+
+    public Application getApplication() {
+        return application;
     }
 }
