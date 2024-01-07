@@ -9,7 +9,7 @@ public class Context {
 
     protected ChaincodeStub stub;
 
-    public Context(final TrainCrossroadChaincodeStub stub) {
+    public Context(final ChaincodeStub stub) {
         this.stub = stub;
     }
 

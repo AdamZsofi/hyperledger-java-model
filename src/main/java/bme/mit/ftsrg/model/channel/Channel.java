@@ -13,7 +13,7 @@ public class Channel {
     private OrderingService orderingService = null;
     private final TrainClient client = null;
 
-    public Channel(String channelID, List<Peer> endorsingPeers) {
+    public Channel(String channelID) {
         this.channelID = channelID;
     }
 

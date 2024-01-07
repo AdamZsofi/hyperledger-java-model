@@ -1,13 +1,14 @@
 package bme.mit.ftsrg.model.participants.ordering;
 
+import bme.mit.ftsrg.model.NetworkParticipant;
 import bme.mit.ftsrg.model.channel.Channel;
 import bme.mit.ftsrg.model.data.Block;
 import bme.mit.ftsrg.model.data.ReadWriteSet;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -15,9 +16,9 @@ import java.util.Random;
  * In reality this is a cluster of nodes running the Raft protocol,
  * but we will handle ordering as a black box with different failure modes
  */
-public class OrderingService {
+public class OrderingService implements NetworkParticipant {
     private final String id;
-    private final List<ReadWriteSet> transactions = new ArrayList<>();
+    private final Queue<ReadWriteSet> transactions = new LinkedList<>();
     private final int blockSize;
     private final FaultMode faultMode;
     private Channel channel = null;
@@ -26,6 +27,18 @@ public class OrderingService {
         this.blockSize = blockSize;
         this.id = id;
         this.faultMode = faultMode;
+    }
+
+    @Override
+    public boolean step() {
+        if(transactions.size()<blockSize) {
+            return false;
+        }
+        while(transactions.size()>=blockSize) {
+            System.out.println("Orderer "+id+" is ordering a new block");
+            orderTransactions();
+        }
+        return true;
     }
 
     public void receiveTransaction(ReadWriteSet readWriteSet) {
@@ -41,23 +54,18 @@ public class OrderingService {
     }
 
     public void orderTransactions() {
-        // TODO do I need anything here to be atomic, thread safe, etc.?
-
         List<ReadWriteSet> transactionsToOrder;
         // Simulate block creation and ordering logic
         if (transactions.size() == blockSize) {
             transactionsToOrder = new ArrayList<>(transactions);
             transactions.clear();
         } else if (transactions.size() > blockSize) {
-            // Take the first blockSize transactions, create a list from those,
-            // and set transactions to the rest of the transactions
-            transactionsToOrder = new ArrayList<>(transactions.subList(0, blockSize));
-            List<ReadWriteSet> restOfTransactions = new ArrayList<>(transactions.subList(blockSize, transactions.size()));
-
-            transactions.clear();
-            transactions.addAll(restOfTransactions);
-            // Now 'firstBlock' contains the first blockSize transactions,
-            // and 'transactions' contains the rest of the transactions.
+            transactionsToOrder = new ArrayList<>();
+            int count = 0;
+            while (count < blockSize && !transactions.isEmpty()) {
+                transactionsToOrder.add(transactions.remove());
+                count++;
+            }
         } else {
             return;
         }

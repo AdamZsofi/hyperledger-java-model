@@ -1,6 +1,7 @@
 package bme.mit.ftsrg.model.participants.peers;
 
 import bme.mit.ftsrg.chaincode.TrainCrossroadContract;
+import bme.mit.ftsrg.model.NetworkParticipant;
 import bme.mit.ftsrg.model.data.Block;
 import bme.mit.ftsrg.model.data.Ledger;
 import bme.mit.ftsrg.model.data.ReadWriteSet;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 
-public class Peer {
+public class Peer implements NetworkParticipant {
     private final String peerId;
     private final Organization org;
     private final Ledger localLedgerCopy = new Ledger();
@@ -31,6 +32,22 @@ public class Peer {
         org.registerPeer(this);
     }
 
+    @Override
+    public boolean step() {
+        if(transactionRequests.isEmpty() && blocksToValidate.isEmpty()) {
+            return false;
+        }
+        while (!transactionRequests.isEmpty()) {
+            System.out.println("Peer "+peerId+" is simulating transaction request");
+            simulateTransactionRequest();
+        }
+        while (!blocksToValidate.isEmpty()) {
+            System.out.println("Peer "+peerId+" is processing block");
+            processBlock();
+        }
+        return true;
+    }
+
     public void registerClient(TrainClient client) {
         this.client = client;
     }
@@ -40,11 +57,28 @@ public class Peer {
     }
 
     public void installContract(Channel channel) {
-        contractInstance = new TrainCrossroadContractInstance(channel, localLedgerCopy);
+        contractInstance = new TrainCrossroadContractInstance(channel);
     }
 
     public void receiveTransactionRequest(String request) {
         transactionRequests.add(request);
+    }
+
+    public void simulateTransactionRequest() {
+        if (!transactionRequests.isEmpty()) {
+            String requestValue = transactionRequests.remove();
+
+            // at this point the fabric implementation has a lot of interfaces, shims, etc.
+            // which are just skipped and simulation is heavily specified and contract specific
+            // see contract instance class below.
+
+            // result of simulation is a read-write set:
+            // https://hyperledger-fabric.readthedocs.io/en/latest/readwrite.html
+            ReadWriteSet rwSet = contractInstance.simulateUpdateStateTransaction(requestValue);
+
+            // send it back to client
+            client.receiveRWSet(rwSet);
+        }
     }
 
     public void receiveBlock(Block block) {
@@ -52,7 +86,6 @@ public class Peer {
     }
 
     public void processBlock() {
-        // TODO update local ledger handling (get it out of stub? or not?)
         if (!blocksToValidate.isEmpty()) {
             Block nextBlock = blocksToValidate.remove();
             for (ReadWriteSet rwset : nextBlock.getTransactions()) {
@@ -88,23 +121,6 @@ public class Peer {
         }
     }
 
-    public void simulateTransactionRequest() {
-        if (!transactionRequests.isEmpty()) {
-            String requestValue = transactionRequests.remove();
-
-            // at this point the fabric implementation has a lot of interfaces, shims, etc.
-            // which are just skipped and simulation is heavily specified and contract specific
-            // see contract instance class below.
-
-            // result of simulation is a read-write set:
-            // https://hyperledger-fabric.readthedocs.io/en/latest/readwrite.html
-            ReadWriteSet rwSet = contractInstance.simulateUpdateStateTransaction(contractInstance.context, requestValue);
-
-            // send it back to client
-            client.receiveRWSet(rwSet);
-        }
-    }
-
     @Override
     public String toString() {
         if (contractInstance == null) {
@@ -114,24 +130,26 @@ public class Peer {
         }
     }
 
+    public String getWorldState(String key) {
+        return localLedgerCopy.getState(key).getValue();
+    }
+
     // this is the contract specific part
-    private static class TrainCrossroadContractInstance {
+    private class TrainCrossroadContractInstance {
         private final TrainCrossroadContract contract;
-        private final Context context;
         private final Channel channel;
 
-        public TrainCrossroadContractInstance(Channel channel, Ledger peerLedgerCopy) {
+        public TrainCrossroadContractInstance(Channel channel) {
             this.channel = channel;
             this.contract = new TrainCrossroadContract();
-            this.context = new Context(new TrainCrossroadChaincodeStub(peerLedgerCopy));
         }
 
-        public ReadWriteSet simulateUpdateStateTransaction(Context context, String requestValue) {
+        public ReadWriteSet simulateUpdateStateTransaction(String requestValue) {
+            TrainCrossroadChaincodeStub stub = new TrainCrossroadChaincodeStub(
+                localLedgerCopy);
+            Context context = new Context(stub); // a new context and stubg for simulating each transaction
             contract.updateState(context, requestValue);
-            // in this case, r/w set only has a single write
-            ReadWriteSet rwset = new ReadWriteSet();
-            rwset.addWrite("canGo", requestValue);
-            return rwset;
+            return stub.readWriteSet;
         }
     }
 }

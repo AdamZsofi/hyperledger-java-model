@@ -24,6 +24,7 @@ public class FabricNetworkBuilder {
         peers = new HashMap<>();
         channels = new HashMap<>();
         orderers = new HashMap<>();
+        clients = new HashMap<>();
     }
 
     public Network build() {
@@ -33,7 +34,7 @@ public class FabricNetworkBuilder {
             }
         }
 
-        Network n = new Network(organizations, peers, channels, clients);
+        Network n = new Network(organizations, peers, channels, clients, orderers);
         resetBuild();
         return n;
     }
@@ -45,7 +46,7 @@ public class FabricNetworkBuilder {
         organizations.put(orgId, new Organization(orgId));
     }
 
-    public void addPeer(String peerId, String orgId) {
+    public Peer addPeer(String peerId, String orgId) {
         if(!organizations.containsKey(orgId)) {
             throw new RuntimeException("Organization with this id does not exist: "+ orgId);
         }
@@ -53,13 +54,16 @@ public class FabricNetworkBuilder {
             throw new RuntimeException("Peer with this id already exists: "+ peerId);
         }
 
-        peers.put(peerId, new Peer(peerId, organizations.get(orgId)));
+        Peer peer = new Peer(peerId, organizations.get(orgId));
+        peers.put(peerId, peer);
+        return peer;
     }
 
     public void addChannel(String channelId) {
         if(channels.containsKey(channelId)) {
             throw new RuntimeException("Channel with this id already exists: "+ channelId);
         }
+        channels.put(channelId, new Channel(channelId));
     }
 
     public void registerPeersToChannel(Iterable<String> peerIds, String channelId) {
@@ -103,10 +107,12 @@ public class FabricNetworkBuilder {
         peers.get(peerId).installContract(channels.get(channelId));
     }
 
-    public void addClient(String clientId, String peerId, String ordererId) {
+    public TrainClient addClient(String clientId, String peerId, String ordererId) {
         if (peers.get(peerId) == null) {
             throw new RuntimeException("Peer can not be registered, it does not exist: "+peerId);
         }
-        clients.put(clientId, new TrainClient(clientId, peers.get(peerId), orderers.get(ordererId)));
+        TrainClient client = new TrainClient(clientId, peers.get(peerId), orderers.get(ordererId));
+        clients.put(clientId, client);
+        return client;
     }
 }
