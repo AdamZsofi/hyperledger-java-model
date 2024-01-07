@@ -1,19 +1,19 @@
 package bme.mit.ftsrg.model;
 
 import bme.mit.ftsrg.model.channel.Channel;
-import bme.mit.ftsrg.model.participants.OrderingService;
+import bme.mit.ftsrg.model.participants.ordering.FaultMode;
+import bme.mit.ftsrg.model.participants.ordering.OrderingService;
 import bme.mit.ftsrg.model.participants.Organization;
-import bme.mit.ftsrg.model.participants.application.Application;
+import bme.mit.ftsrg.model.participants.application.TrainClient;
 import bme.mit.ftsrg.model.participants.peers.Peer;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FabricNetworkBuilder {
     public HashMap<String, OrderingService> orderers;
     public HashMap<String, Organization> organizations;
     public HashMap<String, Peer> peers;
     public HashMap<String, Channel> channels;
+    public HashMap<String, TrainClient> clients;
 
     public FabricNetworkBuilder() {
         resetBuild();
@@ -33,7 +33,7 @@ public class FabricNetworkBuilder {
             }
         }
 
-        Network n = new Network(organizations, peers, channels);
+        Network n = new Network(organizations, peers, channels, clients);
         resetBuild();
         return n;
     }
@@ -56,12 +56,10 @@ public class FabricNetworkBuilder {
         peers.put(peerId, new Peer(peerId, organizations.get(orgId)));
     }
 
-    public void addChannel(String channelId, List<String> endorsingPeerIds) {
+    public void addChannel(String channelId) {
         if(channels.containsKey(channelId)) {
             throw new RuntimeException("Channel with this id already exists: "+ channelId);
         }
-        List<Peer> endorsingPeers = endorsingPeerIds.stream().map(s -> peers.get(s)).collect(Collectors.toList());
-        channels.put(channelId, new Channel(channelId, endorsingPeers));
     }
 
     public void registerPeersToChannel(Iterable<String> peerIds, String channelId) {
@@ -77,8 +75,8 @@ public class FabricNetworkBuilder {
         }
     }
 
-    public void addOrderingService(String orderingServiceId) {
-        orderers.put(orderingServiceId, new OrderingService(orderingServiceId));
+    public void addOrderingService(String orderingServiceId, int blockSize, FaultMode faultMode) {
+        orderers.put(orderingServiceId, new OrderingService(orderingServiceId, blockSize, faultMode));
     }
 
     // we will only allow one ordering service per channel
@@ -92,5 +90,23 @@ public class FabricNetworkBuilder {
             throw new RuntimeException("Orderer with this id does not exist: "+ orderingServiceId);
         }
         channel.registerOrderingService(orderers.get(orderingServiceId));
+        orderers.get(orderingServiceId).registerToChannel(channel);
+    }
+
+    public void installContract(String peerId, String channelId) {
+        if (peers.get(peerId) == null) {
+            throw new RuntimeException("Peer can not be registered, it does not exist: "+peerId);
+        }
+        if (channels.get(channelId) == null) {
+            throw new RuntimeException("Channel with this id does not exist: "+ channelId);
+        }
+        peers.get(peerId).installContract(channels.get(channelId));
+    }
+
+    public void addClient(String clientId, String peerId, String ordererId) {
+        if (peers.get(peerId) == null) {
+            throw new RuntimeException("Peer can not be registered, it does not exist: "+peerId);
+        }
+        clients.put(clientId, new TrainClient(clientId, peers.get(peerId), orderers.get(ordererId)));
     }
 }

@@ -1,4 +1,4 @@
-package bme.mit.ftsrg.model.participants.peers;
+package bme.mit.ftsrg.model.data;
 
 public enum TransactionExecutionStatus {
     SIGNED,

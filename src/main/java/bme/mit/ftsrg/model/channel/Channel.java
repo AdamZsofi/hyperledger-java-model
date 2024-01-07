@@ -1,10 +1,9 @@
 package bme.mit.ftsrg.model.channel;
 
-import bme.mit.ftsrg.model.participants.OrderingService;
-import bme.mit.ftsrg.model.participants.application.Application;
+import bme.mit.ftsrg.model.data.Block;
+import bme.mit.ftsrg.model.participants.ordering.OrderingService;
+import bme.mit.ftsrg.model.participants.application.TrainClient;
 import bme.mit.ftsrg.model.participants.peers.Peer;
-import bme.mit.ftsrg.model.participants.peers.TransactionExecutionStatus;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,12 +11,10 @@ public class Channel {
     private final String channelID;
     private final HashMap<String, Peer> peers = new HashMap<>();
     private OrderingService orderingService = null;
-    private final ChannelConfiguration cc;
-    private final Application app = new Application(this);
+    private final TrainClient client = null;
 
     public Channel(String channelID, List<Peer> endorsingPeers) {
         this.channelID = channelID;
-        this.cc = new ChannelConfiguration(endorsingPeers);
     }
 
     public void registerOrderingService(OrderingService orderingService) {
@@ -33,7 +30,6 @@ public class Channel {
         }
 
         peers.put(peer.getPeerId(), peer);
-        peer.registerOnChannel(channelID);
     }
 
     @Override
@@ -45,19 +41,13 @@ public class Channel {
         return orderingService;
     }
 
-    public Application getApplication() {
-        return app;
+    public TrainClient getClient() {
+        return client;
     }
 
-    public Envelope endorse(String key, byte[] value) {
-        List<TransactionExecutionStatus> endorsements = new ArrayList<>();
-        for (Peer peer : cc.getEndorsingPeers()) {
-            // TODO should be async. comm.?
-            endorsements.add(peer.endorseTransaction(key, value));
+    public void broadcastBlock(Block block) {
+        for (Peer peer : peers.values()) {
+            peer.receiveBlock(block);
         }
-        
-        // TODO create envelope:
-        // TODO what to do with this? e.g. What happens if not endorsed by all?
-        return new Envelope();
     }
 }
