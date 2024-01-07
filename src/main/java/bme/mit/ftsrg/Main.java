@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class Main {
     // TODO configure here (and check assertion below at end of main)
-    public static FaultMode ordererFaultMode = FaultMode.noFaults;
-    public static int blockSize = 2;
+    public static FaultMode ordererFaultMode = FaultMode.canReorder;
+    public static int blockSize = 5;
 
     public static void main(String[] args) {
         FabricNetworkBuilder builder = new FabricNetworkBuilder();
@@ -34,13 +34,20 @@ public class Main {
         System.out.println(network);
 
         client.updateCrossroadState(false); // init
+        client.updateCrossroadState(false); // there is a train coming
+        client.updateCrossroadState(false); // there is a train coming
+        client.updateCrossroadState(false); // there is a train coming
+        client.updateCrossroadState(false); // there is a train coming
         client.updateCrossroadState(true); // no train coming
+        client.updateCrossroadState(false); // there is a train coming
+        client.updateCrossroadState(false); // there is a train coming
+        client.updateCrossroadState(false); // there is a train coming
         client.updateCrossroadState(false); // there is a train coming
         network.execute();
 
         //assert Objects.equals(p1.getWorldState("canGo"), "true") : "canGo should be true in the end!";
-        //assert Objects.equals(p1.getWorldState("canGo"), "false") : "canGo should be false in the end!";
+        assert Objects.equals(p1.getWorldState("canGo"), "false") : "canGo should be false in the end!";
         //assert Objects.equals(p2.getWorldState("canGo"), "false") : "canGo should be false in the end!";
-        //assert Objects.equals(p1.getWorldState("canGo"), p2.getWorldState("canGo")) : "canGo should be false in the end!";
+        //assert Objects.equals(p1.getWorldState("canGo"), p2.getWorldState("canGo")) : "peers should have the same world state in the end!";
     }
 }

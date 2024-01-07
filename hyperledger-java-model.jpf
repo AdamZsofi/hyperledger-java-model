@@ -5,5 +5,5 @@
 target = bme.mit.ftsrg.Main
 classpath = /home/solarowl/Repositories/hyperledger-java-model/build/classes/java/main
 cg.enumerate_random = true
-# cg.randomize_choices = true
+# cg.randomize_choices = random
 +vm.assert = enable
