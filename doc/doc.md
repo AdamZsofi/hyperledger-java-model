@@ -25,7 +25,7 @@ The next sections are ordered as follows:
 3. Verification with JPF
 
 ## How do Hyperledger Fabric Networks Work
-*[main source](https://hyperledger-fabric.readthedocs.io/en/release-2.5/peers/peers.html)*
+*[source](https://hyperledger-fabric.readthedocs.io/en/release-2.5/peers/peers.html)*
 
 Before this course and this project, I haven't had any experience with blockchain, consensus protocols, smart contracts or Fabric, thus the main part of this project was learning and understanding some key concepts, mainly based on the documentation of Hyperledger Fabric.
 
@@ -80,7 +80,7 @@ At this point there might be peers that do not have the same contract (or chainc
 There is a good example for validation available [here](https://hyperledger-fabric.readthedocs.io/en/latest/readwrite.html#example-simulation-and-validation).
 
 ## More about Ordering
-*[main source](https://hyperledger-fabric.readthedocs.io/en/release-2.5/orderer/ordering_service.html#phase-two-ordering-and-packaging-transactions-into-blocks)*
+*[source](https://hyperledger-fabric.readthedocs.io/en/release-2.5/orderer/ordering_service.html#phase-two-ordering-and-packaging-transactions-into-blocks)*
 
 ### What is Ordering
 #### Other, not permissioned blockchains (any node can participate in the consensus process)
