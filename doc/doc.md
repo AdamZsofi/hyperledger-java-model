@@ -164,7 +164,7 @@ Some of the important decisions regarding this is:
 
 ### Model
 
-The model is a Java 11 gradle project. The code is structured the following way:
+The model is a Java 11 gradle project, as this is the highest Java version currently supported by JPF. The code is structured the following way:
 
 ```
 .
