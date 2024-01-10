@@ -1,6 +1,7 @@
 # Modeling and verifying Hyperledger Fabric Networks
 ## CPSoS Homework Project
 Zsófia Ádám
+
 *Supervised by Imre Kocsis and Bertalan Zoltán Péter*
 
 Full documentation is under [doc/doc.md](./doc/doc.md)
