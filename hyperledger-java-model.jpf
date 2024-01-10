@@ -3,7 +3,7 @@
 # command to use from project root (use java 11! you can modify the jpf script under jpf-core/bin, if you want to):
 # <path-to-jpf>/bin/jpf hyperledger-java-model.jpf
 target = bme.mit.ftsrg.Main
-classpath = /home/solarowl/Repositories/hyperledger-java-model/build/classes/java/main
+classpath = ./build/classes/java/main
 cg.enumerate_random = true
 # cg.randomize_choices = random
 +vm.assert = enable

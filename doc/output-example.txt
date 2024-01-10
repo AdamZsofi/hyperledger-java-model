@@ -1,0 +1,90 @@
+[solarowl@E14 hyperledger-java-model]$ ../jpf-core/bin/jpf hyperledger-java-model.jpf
+-Xmx1024m -ea --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
+JavaPathfinder core system v8.0 (rev 1a704e1d6c3d92178504f8cdfe57b068b4e22d9c) - (C) 2005-2014 United States Government. All rights reserved.
+
+
+====================================================== system under test
+bme.mit.ftsrg.Main.main()
+
+====================================================== search started: 1/10/24, 8:15 PM
+[WARNING] orphan NativePeer method: jdk.internal.misc.Unsafe.getUnsafe()Lsun/misc/Unsafe;
+Network{
+peers: {P1=P1 with contract, P2=P2}
+organizations: {R2=Org R2, peers: [P2], R1=Org R1, peers: [P1 with contract]}
+channels: {C1=Channel C1, peers: {P1=P1 with contract, P2=P2}, orderer: O1}
+clients: {Client=Train Client Client, connected to P1}
+}
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Peer P1 is simulating transaction request
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Client Client is forwarding transaction to orderer
+Orderer O1 is ordering a new block
+Orderer O1 is ordering a new block
+Peer P1 is processing block
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Peer P1 is processing block
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Peer P2 is processing block
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Peer P2 is processing block
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Transaction applied to ledger, world state in Peer updated
+Network stopped
+
+====================================================== error 1
+gov.nasa.jpf.vm.NoUncaughtExceptionsProperty
+java.lang.AssertionError: canGo should be false in the end!
+	at bme.mit.ftsrg.Main.main(Main.java:49)
+
+
+====================================================== snapshot #1
+thread java.lang.Thread:{id:0,name:main,status:RUNNING,priority:5,isDaemon:false,lockCount:0,suspendCount:0}
+  call stack:
+	at bme.mit.ftsrg.Main.main(Main.java:49)
+
+
+====================================================== results
+error #1: gov.nasa.jpf.vm.NoUncaughtExceptionsProperty "java.lang.AssertionError: canGo should be false in..."
+
+====================================================== statistics
+elapsed time:       00:00:00
+states:             new=9,visited=0,backtracked=0,end=0
+search:             maxDepth=9,constraints=0
+choice generators:  thread=1 (signal=0,lock=1,sharedRef=0,threadApi=0,reschedule=0), data=8
+heap:               new=1405,released=420,maxLive=844,gcCycles=8
+instructions:       74986
+max memory:         358MB
+loaded code:        classes=142,methods=2996
+
+====================================================== search finished: 1/10/24, 8:15 PM

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO keep invalid transactions
+
 public class Ledger {
     private final List<LedgerEntry> entries = new ArrayList<>();
     private final Map<String, LedgerEntry> state = new HashMap<>();
