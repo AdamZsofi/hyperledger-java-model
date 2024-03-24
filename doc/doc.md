@@ -215,7 +215,3 @@ Which means that after the execution is done, we would like to make sure that `c
 After executing JPF (see the JPF configuration file for commands), it found the issue with the assertion and even gave the output for an erroneus execution. I also played around with the block size, fault modes, different input sequences and some slightly different properties and the model worked as expected, producing assertions violations or no violations in different cases.
 
 An example JPF output for a violation (blockSize=2, ordererFaultMode=canLose, input is setting `canGo` to f,t,f,f,t,f, property is the same as the example above) is available under [doc/output-example.txt](./output-example.txt).
-
-## Summary
-
-I learned about Hyperledger Fabric, chaincode and permissioned consensus during this homework project. Although the example is trivial, and the model is fairly simple, but it includes an actual (small) Fabric contract, it works as a demo and it is extensible at several points for more complex examples.
