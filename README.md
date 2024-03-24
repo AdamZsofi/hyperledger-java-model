@@ -1,4 +1,4 @@
-# Modeling and verifying Hyperledger Fabric Networks
+# Modeling and Verifying Hyperledger Fabric Networks
 ## How to Use This Prototype
 
 1. Download the [core project of JPF](https://github.com/javapathfinder/jpf-core)
