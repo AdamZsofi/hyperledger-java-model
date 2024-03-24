@@ -6,8 +6,7 @@
 3. Configure the Model by changing the [`Main` class](https://github.com/AdamZsofi/hyperledger-java-model/blob/main/src/main/java/bme/mit/ftsrg/Main.java) (and even the smart contract under the package [`chaincode`](https://github.com/AdamZsofi/hyperledger-java-model/tree/main/src/main/java/bme/mit/ftsrg/chaincode))
 4. Execute JPF from this project's root (use <=java 11!): `<path-to-jpf>/bin/jpf hyperledger-java-model.jpf` ([JPF configuration here](https://github.com/AdamZsofi/hyperledger-java-model/blob/main/hyperledger-java-model.jpf), [documentation on JPF configurations](https://github.com/javapathfinder/jpf-core/wiki/Configuring-JPF))
 
-## Introduction
-*TBA from paper*
+## Further Content
 
 The next sections are ordered as follows:
 1. A summary of how Fabric Networks Work
