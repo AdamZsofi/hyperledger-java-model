@@ -1,19 +1,19 @@
-// WARNING: NON-FUNCTIONAL MOCK CLASS
-
+/* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.mockFabric;
 
-// Based on: https://github.com/hyperledger/fabric-chaincode-java/blob/68a1ef2c2cdf8a61140f75351da008f33f9ecb9d/fabric-chaincode-shim/src/main/java/org/hyperledger/fabric/contract/Context.java
+// Based on:
+// https://github.com/hyperledger/fabric-chaincode-java/blob/68a1ef2c2cdf8a61140f75351da008f33f9ecb9d/fabric-chaincode-shim/src/main/java/org/hyperledger/fabric/contract/Context.java
 
 public class Context {
-    // no identity - not part of the model
+  // no identity - not part of the model
 
-    protected ChaincodeStub stub;
+  protected ChaincodeStub stub;
 
-    public Context(final ChaincodeStub stub) {
-        this.stub = stub;
-    }
+  public Context(final ChaincodeStub stub) {
+    this.stub = stub;
+  }
 
-    public ChaincodeStub getStub() {
-        return this.stub;
-    }
+  public ChaincodeStub getStub() {
+    return this.stub;
+  }
 }

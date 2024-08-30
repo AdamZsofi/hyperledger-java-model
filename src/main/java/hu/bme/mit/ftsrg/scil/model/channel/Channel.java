@@ -1,53 +1,54 @@
+/* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.model.channel;
 
 import hu.bme.mit.ftsrg.scil.model.data.Block;
-import hu.bme.mit.ftsrg.scil.model.participants.ordering.OrderingService;
 import hu.bme.mit.ftsrg.scil.model.participants.application.TrainClient;
+import hu.bme.mit.ftsrg.scil.model.participants.ordering.OrderingService;
 import hu.bme.mit.ftsrg.scil.model.participants.peers.Peer;
 import java.util.HashMap;
-import java.util.List;
 
 public class Channel {
-    private final String channelID;
-    private final HashMap<String, Peer> peers = new HashMap<>();
-    private OrderingService orderingService = null;
-    private final TrainClient client = null;
+  private final String channelID;
+  private final HashMap<String, Peer> peers = new HashMap<>();
+  private OrderingService orderingService = null;
+  private final TrainClient client = null;
 
-    public Channel(String channelID) {
-        this.channelID = channelID;
+  public Channel(String channelID) {
+    this.channelID = channelID;
+  }
+
+  public void registerOrderingService(OrderingService orderingService) {
+    if (this.orderingService != null) {
+      throw new RuntimeException("Channel already has an ordering service registered.");
+    }
+    this.orderingService = orderingService;
+  }
+
+  public void registerPeer(Peer peer) {
+    if (peers.containsKey(peer.getPeerId())) {
+      throw new RuntimeException(
+          "Peer (id:" + peer.getPeerId() + ") already registered on channel");
     }
 
-    public void registerOrderingService(OrderingService orderingService) {
-        if (this.orderingService != null) {
-            throw new RuntimeException("Channel already has an ordering service registered.");
-        }
-        this.orderingService = orderingService;
-    }
+    peers.put(peer.getPeerId(), peer);
+  }
 
-    public void registerPeer(Peer peer) {
-        if (peers.containsKey(peer.getPeerId())) {
-            throw new RuntimeException("Peer (id:"+peer.getPeerId()+") already registered on channel");
-        }
+  @Override
+  public String toString() {
+    return "Channel " + channelID + ", peers: " + peers + ", orderer: " + orderingService;
+  }
 
-        peers.put(peer.getPeerId(), peer);
-    }
+  public OrderingService getOrderingService() {
+    return orderingService;
+  }
 
-    @Override
-    public String toString() {
-        return "Channel " + channelID + ", peers: " + peers + ", orderer: " + orderingService;
-    }
+  public TrainClient getClient() {
+    return client;
+  }
 
-    public OrderingService getOrderingService() {
-        return orderingService;
+  public void broadcastBlock(Block block) {
+    for (Peer peer : peers.values()) {
+      peer.receiveBlock(block);
     }
-
-    public TrainClient getClient() {
-        return client;
-    }
-
-    public void broadcastBlock(Block block) {
-        for (Peer peer : peers.values()) {
-            peer.receiveBlock(block);
-        }
-    }
+  }
 }

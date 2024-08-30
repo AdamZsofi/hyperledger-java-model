@@ -1,29 +1,29 @@
+/* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.model.participants;
 
 import hu.bme.mit.ftsrg.scil.model.participants.peers.Peer;
 import java.util.ArrayList;
 
 public class Organization {
-    //public static HashMap<String, Organization> organizations;
-    public final String id;
+  // public static HashMap<String, Organization> organizations;
+  public final String id;
 
-    @Override
-    public String toString() {
-        return "Org "+id+
-            ", peers: " + peers;
-    }
+  @Override
+  public String toString() {
+    return "Org " + id + ", peers: " + peers;
+  }
 
-    private final ArrayList<Peer> peers = new ArrayList<>();
+  private final ArrayList<Peer> peers = new ArrayList<>();
 
-    public Organization(String id) {
-        this.id = id;
-    }
+  public Organization(String id) {
+    this.id = id;
+  }
 
-    public ArrayList<Peer> getPeers() {
-        return peers;
-    }
+  public ArrayList<Peer> getPeers() {
+    return peers;
+  }
 
-    public void registerPeer(Peer peer) {
-        peers.add(peer);
-    }
+  public void registerPeer(Peer peer) {
+    peers.add(peer);
+  }
 }

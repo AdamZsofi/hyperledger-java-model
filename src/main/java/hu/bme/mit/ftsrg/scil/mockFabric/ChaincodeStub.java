@@ -1,11 +1,12 @@
+/* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.mockFabric;
 
 public interface ChaincodeStub {
-    byte[] getState(String key);
+  byte[] getState(String key);
 
-    void putStringState(String key, String value);
+  void putStringState(String key, String value);
 
-    void putState(String key, byte[] value);
+  void putState(String key, byte[] value);
 
-    void delState(String key);
+  void delState(String key);
 }
