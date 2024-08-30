@@ -1,0 +1,7 @@
+package hu.bme.mit.ftsrg.scil.mockFabric;
+
+public interface ContractInterface {
+    default Context createContext(final ChaincodeStub stub) {
+        return new Context(stub);
+    }
+}
