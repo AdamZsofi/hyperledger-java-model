@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-package hu.bme.mit.ftsrg.scil.mockFabric;
+package hu.bme.mit.ftsrg.scil.mockfabric;
 
 import hu.bme.mit.ftsrg.scil.model.data.Ledger;
 import hu.bme.mit.ftsrg.scil.model.data.Ledger.LedgerEntry;
