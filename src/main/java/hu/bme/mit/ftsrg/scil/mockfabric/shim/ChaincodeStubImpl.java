@@ -1,16 +1,16 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-package hu.bme.mit.ftsrg.scil.mockfabric;
+package hu.bme.mit.ftsrg.scil.mockfabric.shim;
 
 import hu.bme.mit.ftsrg.scil.model.data.Ledger;
 import hu.bme.mit.ftsrg.scil.model.data.Ledger.LedgerEntry;
 import hu.bme.mit.ftsrg.scil.model.data.ReadWriteSet;
 
-public class TrainCrossroadChaincodeStub implements ChaincodeStub {
+public class ChaincodeStubImpl implements ChaincodeStub {
   private final Ledger ledgerCopy;
   public ReadWriteSet readWriteSet;
 
   // we will only have a single key in the ledger/world state (canGo)
-  public TrainCrossroadChaincodeStub(Ledger peerLedgerCopy) {
+  public ChaincodeStubImpl(Ledger peerLedgerCopy) {
     this.ledgerCopy = peerLedgerCopy;
     //        ledgerCopy.addEntry("canGo", "false");
     readWriteSet = new ReadWriteSet();
@@ -20,6 +20,11 @@ public class TrainCrossroadChaincodeStub implements ChaincodeStub {
     LedgerEntry state = ledgerCopy.getState(key);
     readWriteSet.addRead(key, state.getVersion());
     return state.getValue().getBytes();
+  }
+
+  @Override
+  public String getStringState(String key) {
+    return "";
   }
 
   public void putStringState(String key, String value) {
