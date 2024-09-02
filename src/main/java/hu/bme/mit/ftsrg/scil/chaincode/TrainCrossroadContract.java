@@ -5,8 +5,8 @@ package hu.bme.mit.ftsrg.scil.chaincode;
 // https://github.com/hyperledger/fabric-chaincode-java/blob/main/examples/fabric-contract-example-gradle/src/main/java/org/example/MyAssetContract.java
 // TODO for now, this contract is hardcoded everywhere
 
-import hu.bme.mit.ftsrg.scil.mockFabric.Context;
-import hu.bme.mit.ftsrg.scil.mockFabric.ContractInterface;
+import hu.bme.mit.ftsrg.scil.mockfabric.contract.Context;
+import hu.bme.mit.ftsrg.scil.mockfabric.contract.ContractInterface;
 
 public class TrainCrossroadContract implements ContractInterface {
   // @Transaction()

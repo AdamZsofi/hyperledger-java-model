@@ -16,9 +16,9 @@ public class ReadWriteSet {
     return writeSet;
   }
 
-  // TODO: I think only last write of the same key should be kept in the RWSet, but it does not
-  // matter in the simple train crossroad example
   public void addWrite(String key, String value) {
+    // TODO (AdamZsofi): I think only last write of the same key should be kept in the RWSet, but it
+    // does not matter in the simple train crossroad example
     writeSet.put(key, value);
   }
 

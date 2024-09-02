@@ -1,61 +1,63 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-package hu.bme.mit.ftsrg.scil.model.participants.peers;
+package hu.bme.mit.ftsrg.scil.model.participant;
 
 import hu.bme.mit.ftsrg.scil.chaincode.TrainCrossroadContract;
-import hu.bme.mit.ftsrg.scil.mockFabric.Context;
-import hu.bme.mit.ftsrg.scil.mockFabric.TrainCrossroadChaincodeStub;
-import hu.bme.mit.ftsrg.scil.model.NetworkParticipant;
-import hu.bme.mit.ftsrg.scil.model.channel.Channel;
+import hu.bme.mit.ftsrg.scil.mockfabric.contract.Context;
+import hu.bme.mit.ftsrg.scil.mockfabric.shim.ChaincodeStubImpl;
+import hu.bme.mit.ftsrg.scil.model.Channel;
 import hu.bme.mit.ftsrg.scil.model.data.Block;
 import hu.bme.mit.ftsrg.scil.model.data.Ledger;
 import hu.bme.mit.ftsrg.scil.model.data.ReadWriteSet;
-import hu.bme.mit.ftsrg.scil.model.participants.Organization;
-import hu.bme.mit.ftsrg.scil.model.participants.application.TrainClient;
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 
-public class Peer implements NetworkParticipant {
-  private final String peerId;
+import static hu.bme.mit.ftsrg.scil.model.participant.SimulationStepResult.CONTINUE;
+import static hu.bme.mit.ftsrg.scil.model.participant.SimulationStepResult.NOTHING_TO_DO;
+
+public class Peer extends ParticipantWithId {
   private final Organization org;
   private final Ledger localLedgerCopy = new Ledger();
   // for now, the only kind of request is update state to a given boolean value (which we receive as
   // a string
-  private final Queue<String> transactionRequests = new LinkedList<String>();
+  private final Queue<String> transactionRequests = new LinkedList<>();
   private final Queue<Block> blocksToValidate = new LinkedList<>();
   private TrainCrossroadContractInstance contractInstance = null;
   private TrainClient client = null;
 
-  public Peer(String peerId, Organization org) {
-    this.peerId = peerId;
+  public Peer(String id, Organization org) {
+    super(id);
     this.org = org;
     org.registerPeer(this);
   }
 
   @Override
-  public boolean step() {
+  public SimulationStepResult step() {
     if (transactionRequests.isEmpty() && blocksToValidate.isEmpty()) {
-      return false;
+      return NOTHING_TO_DO;
     }
+
     while (!transactionRequests.isEmpty()) {
-      System.out.println("Peer " + peerId + " is simulating transaction request");
+      System.out.println("Peer " + id + " is simulating transaction request");
       simulateTransactionRequest();
     }
+
     while (!blocksToValidate.isEmpty()) {
-      System.out.println("Peer " + peerId + " is processing block");
+      System.out.println("Peer " + id + " is processing block");
       processBlock();
     }
-    return true;
+
+    return CONTINUE;
   }
 
   public void registerClient(TrainClient client) {
     this.client = client;
   }
 
-  public String getPeerId() {
-    return peerId;
+  public String getId() {
+    return id;
   }
 
   public void installContract(Channel channel) {
@@ -106,29 +108,26 @@ public class Peer implements NetworkParticipant {
   public boolean validateTransaction(ReadWriteSet readWriteSet) {
     Map<String, Integer> readSet = readWriteSet.getReadSet();
 
-    if (!readSet.isEmpty()) {
-      for (HashMap.Entry<String, Integer> entry : readSet.entrySet()) {
-        String key = entry.getKey();
-        int version = entry.getValue();
+    for (Map.Entry<String, Integer> entry : readSet.entrySet()) {
+      String key = entry.getKey();
+      int version = entry.getValue();
 
-        if (localLedgerCopy.getState(key).getVersion() >= version) {
-          return false;
-        }
+      /* MVCC conflict -> invalidate transaction */
+      if (localLedgerCopy.getState(key).getVersion() >= version) {
+        return false;
       }
-      // All entries passed validation
-      return true;
-    } else {
-      // No entries in the writeSet, consider it valid
-      return true;
     }
+
+    /* No conflicts (or empty read set) -> consider tx valid */
+    return true;
   }
 
   @Override
   public String toString() {
     if (contractInstance == null) {
-      return peerId;
+      return super.toString();
     } else {
-      return peerId + " with contract";
+      return super.toString() + "[with contract]";
     }
   }
 
@@ -147,7 +146,7 @@ public class Peer implements NetworkParticipant {
     }
 
     public ReadWriteSet simulateUpdateStateTransaction(String requestValue) {
-      TrainCrossroadChaincodeStub stub = new TrainCrossroadChaincodeStub(localLedgerCopy);
+      ChaincodeStubImpl stub = new ChaincodeStubImpl(localLedgerCopy);
       Context context =
           new Context(stub); // a new context and stubg for simulating each transaction
       contract.updateState(context, requestValue);

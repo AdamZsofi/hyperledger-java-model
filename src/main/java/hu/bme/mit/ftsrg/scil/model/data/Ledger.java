@@ -1,15 +1,12 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.model.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // TODO keep invalid transactions
 
 public class Ledger {
-  private final List<LedgerEntry> entries = new ArrayList<>();
+  private final List<LedgerEntry> entries = new LinkedList<>();
   private final Map<String, LedgerEntry> state = new HashMap<>();
 
   public void addEntry(String key, String value) {
@@ -30,6 +27,11 @@ public class Ledger {
     return state.get(key);
   }
 
+  /**
+   * An entry in the ledger state.
+   *
+   * <p>This class is designed to be immutable.
+   */
   public static final class LedgerEntry {
     private final String key;
     private final String value;
@@ -53,20 +55,9 @@ public class Ledger {
       return version;
     }
 
-    // No setters provided to make the class immutable
-
     @Override
     public String toString() {
-      return "LedgerEntry{"
-          + "key='"
-          + key
-          + '\''
-          + ", value='"
-          + value
-          + '\''
-          + ", version="
-          + version
-          + '}';
+      return String.format("LedgerEntry{key='%s',value='%s',version=%d}", key, value, version);
     }
   }
 }
