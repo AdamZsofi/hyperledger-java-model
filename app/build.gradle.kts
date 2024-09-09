@@ -1,21 +1,18 @@
 plugins {
-  id("java")
-  id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.20"
-  id("com.diffplug.spotless") version "6.25.0"
+  java
+  alias(libs.plugins.spotless)
 }
 
-group = "org.example"
+group = "hu.bme.mit.ftsrg"
 
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 java { toolchain { languageVersion.set(JavaLanguageVersion.of(11)) } }
 
 repositories { mavenCentral() }
 
 dependencies {
-  testImplementation(platform("org.junit:junit-bom:5.9.1"))
-  testImplementation("org.junit.jupiter:junit-jupiter")
-  implementation("com.owlike:genson:1.6")
+  implementation(libs.genson)
 }
 
 tasks.test { useJUnitPlatform() }
