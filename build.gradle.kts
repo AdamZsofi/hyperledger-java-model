@@ -20,6 +20,10 @@ dependencies {
 
 tasks.test { useJUnitPlatform() }
 
+tasks.withType<JavaCompile> {
+  options.compilerArgs.add("-Aproject=${project.group}/${project.name}")
+}
+
 spotless {
   ratchetFrom("origin/main")
 

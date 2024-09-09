@@ -4,13 +4,13 @@ package hu.bme.mit.ftsrg.scil.model;
 import hu.bme.mit.ftsrg.scil.model.data.Block;
 import hu.bme.mit.ftsrg.scil.model.participant.OrderingService;
 import hu.bme.mit.ftsrg.scil.model.participant.Peer;
-import hu.bme.mit.ftsrg.scil.model.participant.TrainClient;
+import hu.bme.mit.ftsrg.scil.model.participant.Client;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Channel extends WithId {
   private final Map<String, Peer> peers = new HashMap<>();
-  private TrainClient client;
+  private Client client;
   private OrderingService orderingService;
 
   public Channel(String id) {
@@ -43,7 +43,7 @@ public class Channel extends WithId {
     return orderingService;
   }
 
-  public TrainClient getClient() {
+  public Client getClient() {
     return client;
   }
 

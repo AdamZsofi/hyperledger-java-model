@@ -1,28 +1,32 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.model;
 
-import hu.bme.mit.ftsrg.scil.model.participant.Organization;
-import hu.bme.mit.ftsrg.scil.model.participant.TrainClient;
-import hu.bme.mit.ftsrg.scil.model.participant.OrderingService;
-import hu.bme.mit.ftsrg.scil.model.participant.Peer;
+import static hu.bme.mit.ftsrg.scil.model.participant.SimulationStepResult.CONTINUE;
 
+import hu.bme.mit.ftsrg.scil.logging.Logger;
+import hu.bme.mit.ftsrg.scil.logging.LoggerType;
+import hu.bme.mit.ftsrg.scil.model.participant.Client;
+import hu.bme.mit.ftsrg.scil.model.participant.OrderingService;
+import hu.bme.mit.ftsrg.scil.model.participant.Organization;
+import hu.bme.mit.ftsrg.scil.model.participant.Peer;
+import hu.bme.mit.ftsrg.scil.util.PrettyPrint;
 import java.util.HashMap;
 import java.util.Map;
-
-import static hu.bme.mit.ftsrg.scil.model.participant.SimulationStepResult.CONTINUE;
+import org.hyperledger.fabric.contract.ContractInterface;
 
 public class Network {
   private final Map<String, Organization> organizations;
   private final Map<String, Peer> peers;
   private final Map<String, Channel> channels;
-  private final Map<String, TrainClient> clients;
+  private final Map<String, Client> clients;
   private final Map<String, OrderingService> orderers;
+  private final Logger logger = Logger.create(LoggerType.CONSOLE, "network");
 
   public Network(
       Map<String, Organization> organizations,
       Map<String, Peer> peers,
       Map<String, Channel> channels,
-      Map<String, TrainClient> clients,
+      Map<String, Client> clients,
       Map<String, OrderingService> orderers) {
     this.organizations = organizations;
     this.peers = peers;
@@ -31,22 +35,25 @@ public class Network {
     this.orderers = orderers;
   }
 
+  public static Builder builder() {
+    return new Builder();
+  }
+
   @Override
   public String toString() {
     return String.format(
         "Network{\npeers: %s\norganizations: %s\nchannels: %s\nclients: %s\n}",
-        peers, organizations, channels, clients);
-  }
-
-  public static Builder builder() {
-    return new Builder();
+        PrettyPrint.prettifyMap(peers),
+        PrettyPrint.prettifyMap(organizations),
+        PrettyPrint.prettifyMap(channels),
+        PrettyPrint.prettifyMap(clients));
   }
 
   public Peer getPeer(String peerId) {
     return peers.get(peerId);
   }
 
-  public TrainClient getClient(String clientId) {
+  public Client getClient(String clientId) {
     return clients.get(clientId);
   }
 
@@ -79,7 +86,7 @@ public class Network {
           almostDone = false;
         }
       }
-      for (TrainClient client : clients.values()) {
+      for (Client client : clients.values()) {
         if (client.step() == CONTINUE) {
           almostDone = false;
         }
@@ -95,7 +102,7 @@ public class Network {
       }
     }
 
-    System.out.println("Network stopped");
+    logger.info("Network stopped");
   }
 
   public static class Builder {
@@ -103,7 +110,7 @@ public class Network {
     public Map<String, Organization> organizations;
     public Map<String, Peer> peers;
     public Map<String, Channel> channels;
-    public Map<String, TrainClient> clients;
+    public Map<String, Client> clients;
 
     public Builder() {
       reset();
@@ -186,8 +193,7 @@ public class Network {
       return this;
     }
 
-    public Builder registerOrderingServiceToChannel(
-        String orderingServiceId, String channelId) {
+    public Builder registerOrderingServiceToChannel(String orderingServiceId, String channelId) {
       // we will only allow one ordering service per channel
       // but one ordering service can be registered to several channels
       Channel channel = channels.get(channelId);
@@ -205,7 +211,7 @@ public class Network {
       return this;
     }
 
-    public Builder installContract(String peerId, String channelId) {
+    public Builder installContract(ContractInterface contract, String peerId, String channelId) {
       if (peers.get(peerId) == null) {
         throw new RuntimeException("Peer can not be registered, it does not exist: " + peerId);
       }
@@ -214,7 +220,7 @@ public class Network {
         throw new RuntimeException("Channel with this id does not exist: " + channelId);
       }
 
-      peers.get(peerId).installContract(channels.get(channelId));
+      peers.get(peerId).installContract(contract, channels.get(channelId));
 
       return this;
     }
@@ -224,7 +230,7 @@ public class Network {
         throw new RuntimeException("Peer can not be registered, it does not exist: " + peerId);
       }
 
-      TrainClient client = new TrainClient(clientId, peers.get(peerId), orderers.get(ordererId));
+      Client client = new Client(clientId, peers.get(peerId), orderers.get(ordererId));
       clients.put(clientId, client);
 
       return this;

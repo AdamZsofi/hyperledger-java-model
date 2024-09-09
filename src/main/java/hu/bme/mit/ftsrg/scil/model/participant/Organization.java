@@ -1,20 +1,21 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 package hu.bme.mit.ftsrg.scil.model.participant;
 
+import hu.bme.mit.ftsrg.scil.model.WithId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
-public class Organization {
-  public final String id;
+public class Organization extends WithId {
   private final Collection<Peer> peers = new ArrayList<>();
 
   public Organization(String id) {
-    this.id = id;
+    super(id);
   }
 
   @Override
   public String toString() {
-    return "Org " + id + ", peers: " + peers;
+    return super.toString() + String.format("[peers=%s]", Arrays.toString(peers.toArray()));
   }
 
   public Collection<Peer> getPeers() {

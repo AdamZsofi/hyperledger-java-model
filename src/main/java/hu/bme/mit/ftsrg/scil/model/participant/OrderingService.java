@@ -4,6 +4,8 @@ package hu.bme.mit.ftsrg.scil.model.participant;
 import static hu.bme.mit.ftsrg.scil.model.participant.SimulationStepResult.CONTINUE;
 import static hu.bme.mit.ftsrg.scil.model.participant.SimulationStepResult.NOTHING_TO_DO;
 
+import hu.bme.mit.ftsrg.scil.logging.Logger;
+import hu.bme.mit.ftsrg.scil.logging.LoggerType;
 import hu.bme.mit.ftsrg.scil.model.Channel;
 import hu.bme.mit.ftsrg.scil.model.data.Block;
 import hu.bme.mit.ftsrg.scil.model.data.ReadWriteSet;
@@ -30,11 +32,13 @@ public class OrderingService extends ParticipantWithId {
   private final FaultMode faultMode;
   private final Random random = new Random();
   private Channel channel;
+  private final Logger logger;
 
   public OrderingService(String id, int blockSize, FaultMode faultMode) {
     super(id);
     this.blockSize = blockSize;
     this.faultMode = faultMode;
+    logger = Logger.create(LoggerType.CONSOLE, toString());
   }
 
   @Override
@@ -44,7 +48,7 @@ public class OrderingService extends ParticipantWithId {
     }
 
     while (transactions.size() >= blockSize) {
-      System.out.println("Orderer " + id + " is building a new block");
+      logger.info("building a new block");
       orderTransactions();
     }
 

@@ -12,6 +12,15 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/examples/train-crossing" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/examples/train-crossing" />
+            <option value="$PROJECT_DIR$/examples/train-crossing/chaincode" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>
