@@ -2,9 +2,10 @@
 # ./gradlew buildJars
 # command to use from project root (use java 11! you can modify the jpf script under jpf-core/bin, if you want to):
 # <path-to-jpf>/bin/jpf hyperledger-java-model.jpf
-target = hu.bme.mit.ftsrg.scil.Main
-target.args = -v,-v,-v,-f,CAN_DROP,hu.bme.mit.ftsrg.chaincode.traincrossing.TrainCrossing
-classpath = ./build/classes/java/main:./examples/train-crossing/chaincode/build/classes/java/main
+target = hu.bme.mit.ftsrg.scil.cli.CommandLineInterface
+#target.args = -v,-v,-v,-f,CAN_DROP,-i,traincrossing.invocations,hu.bme.mit.ftsrg.chaincode.traincrossing.TrainCrossing
+target.args = -v,-v,-v,-f,CAN_DROP,-i,updateState false! updateState true! updateState false! updateState false! updateState true! updateState false,hu.bme.mit.ftsrg.chaincode.traincrossing.TrainCrossing
+classpath = ./app/build/libs/app-0.1.0-all.jar:./examples/train-crossing/chaincode/build/classes/java/main
 cg.enumerate_random = true
 # cg.randomize_choices = random
 +vm.assert = enable

@@ -1,6 +1,7 @@
 plugins {
   java
   alias(libs.plugins.spotless)
+  alias(libs.plugins.shadow)
 }
 
 group = "hu.bme.mit.ftsrg"
